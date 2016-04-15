@@ -1,6 +1,7 @@
 import sys
 from PySide import QtGui, QtCore
 
+from ezc_gui.ezcUrl import EZCUrl
 from ezc_qrcode.ezcQRCode import EZCQRCode
 
 class EZCGui():
@@ -13,21 +14,55 @@ class EZCWidget(QtGui.QWidget):
     def __init__(self):
         super(EZCWidget, self).__init__()
         
+        self.title = 'ezcheckin'
+        self.qrSize = (400, 400)
+        self.timerInterval = 3000
         self.initUI()
         
-    def initUI(self):      
-        hbox = QtGui.QHBoxLayout(self)
-        qrCode = EZCQRCode()
-        imgPath = qrCode.getQrcode('http://www.baidu.com/')
-        pixmap = QtGui.QPixmap(imgPath)
-
-        lbl = QtGui.QLabel(self)
-        lbl.setPixmap(pixmap)
-
-        hbox.addWidget(lbl)
-        self.setLayout(hbox)
-        
-        self.setGeometry(300, 300, 280, 170)
-        self.setWindowTitle(imgPath)
+    def initUI(self):  
+        self.initWindow()   
+        self.initLabel()  
+        self.initImg() 
+        self.initLayout()
+        self.initTimer() 
         self.show()    
+    
+    def initLabel(self):
+        self.label = QtGui.QLabel(self)       
+        
+    def initImg(self):
+        qrCode = EZCQRCode()
+        ezcUrl = EZCUrl()
+        url = ezcUrl.getUrl()
+        imgPath = qrCode.getQrcode(url)
+        self.pixmap = QtGui.QPixmap(imgPath)   
+   
+    def initLayout(self):
+        self.grid = QtGui.QGridLayout()
+        
+        geometryRect = self.geometry() 
+        print geometryRect.x()
+        print geometryRect.height()
+        self.pixmap = self.pixmap.scaled(self.qrSize[0], self.qrSize[1], \
+            QtCore.Qt.KeepAspectRatio)
+        self.label.setPixmap(self.pixmap)
+        self.grid.addWidget(self.label,0, 0, QtCore.Qt.AlignCenter)
+        self.setLayout(self.grid)
 
+    def initWindow(self):
+        self.screen = QtGui.QDesktopWidget().screenGeometry()
+        self.setGeometry(0, 0, self.screen.width(), self.screen.height())
+        self.setWindowTitle(self.title)
+
+    def initTimer(self):
+        timer = QtCore.QTimer(self)
+        self.connect(timer, QtCore.SIGNAL("timeout()"), self.setImg)
+        timer.start(self.timerInterval)
+
+    def setImg(self): 
+        qrCode = EZCQRCode()
+        ezcUrl = EZCUrl()
+        url = ezcUrl.getUrl()
+        imgPath = qrCode.getQrcode(url)
+        self.pixmap.load(imgPath)
+        self.label.setPixmap(self.pixmap)
