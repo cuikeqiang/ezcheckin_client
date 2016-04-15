@@ -1,14 +1,20 @@
 import qrcode
+from ezc_gui.ezcUrl import EZCUrl
 class EZCQRCode():
     
     def __init__(self):
         self.imgPath = '/home/ckq/projects/ezcheckin_client/test.png'
         
-    def getQrcode(self, strToUse):
+    def getQrcode(self):
+        ezcUrl = EZCUrl()
+        url = ezcUrl.getUrl()
+        self.make(url)
+        return self.imgPath
+
+    def make(self, strToUse):  
         img = qrcode.make(strToUse)  
         img.save(self.imgPath)
-        return self.imgPath
-        
+
     def start(self):
         img = getQrcode()
         app = QtGui.QApplication(sys.argv)

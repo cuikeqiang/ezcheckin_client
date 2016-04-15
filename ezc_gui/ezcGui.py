@@ -1,7 +1,6 @@
 import sys
 from PySide import QtGui, QtCore
 
-from ezc_gui.ezcUrl import EZCUrl
 from ezc_qrcode.ezcQRCode import EZCQRCode
 
 class EZCGui():
@@ -36,18 +35,15 @@ class EZCWidget(QtGui.QWidget):
         self.label = QtGui.QLabel(self)       
         
     def initImg(self):
-        qrCode = EZCQRCode()
-        ezcUrl = EZCUrl()
-        url = ezcUrl.getUrl()
-        imgPath = qrCode.getQrcode(url)
-        self.pixmap = QtGui.QPixmap(imgPath)   
+        self.changeQrCode()  
    
     def initLayout(self):
         self.grid = QtGui.QGridLayout()
         self.pixmap = self.resizeQrCode()
         self.label.setPixmap(self.pixmap)
-        self.label.setMinimumSize(self.qrCodeLabelMinimumSize[0], self.qrCodeLabelMinimumSize[1])
-        self.grid.addWidget(self.label,0, 0, QtCore.Qt.AlignCenter)
+        self.label.setMinimumSize(self.qrCodeLabelMinimumSize[0], \
+            self.qrCodeLabelMinimumSize[1])
+        self.grid.addWidget(self.label, 0, 0, QtCore.Qt.AlignCenter)
         self.setLayout(self.grid)
 
     def initTimer(self):
@@ -57,11 +53,8 @@ class EZCWidget(QtGui.QWidget):
 
     def changeQrCode(self):         
         qrCode = EZCQRCode()
-        ezcUrl = EZCUrl()
-        url = ezcUrl.getUrl()
-        imgPath = qrCode.getQrcode(url)
-
-        self.pixmap.load(imgPath)
+        imgPath = qrCode.getQrcode()
+        self.pixmap = QtGui.QPixmap(imgPath)
         self.pixmap = self.resizeQrCode()
         self.label.setPixmap(self.pixmap)
 
