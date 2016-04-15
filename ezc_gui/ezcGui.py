@@ -2,6 +2,7 @@ import sys
 from PySide import QtGui, QtCore
 
 from ezc_qrcode.ezcQRCode import EZCQRCode
+from ezc_config.ezcConfig import EZCConfig
 
 class EZCGui():
     def start(self):
@@ -15,7 +16,7 @@ class EZCWidget(QtGui.QWidget):
         
         self.title = 'ezcheckin'
         self.qrCodeLabelMinimumSize = (150, 150)
-        self.timerInterval = 3000
+        self.timerInterval = EZCConfig.getTimeInterval()
         self.initUI()
         
     def initUI(self):  

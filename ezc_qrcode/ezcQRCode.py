@@ -1,5 +1,5 @@
 import qrcode
-from ezc_gui.ezcUrl import EZCUrl
+from ezc_config.ezcUrl import EZCUrl
 class EZCQRCode():
     
     def __init__(self):
