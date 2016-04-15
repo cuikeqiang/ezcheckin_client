@@ -15,7 +15,7 @@ class EZCWidget(QtGui.QWidget):
         super(EZCWidget, self).__init__()
         
         self.title = 'ezcheckin'
-        self.qrSize = (400, 400)
+        self.qrCodeLabelMinimumSize = (150, 150)
         self.timerInterval = 3000
         self.initUI()
         
@@ -46,6 +46,7 @@ class EZCWidget(QtGui.QWidget):
         self.grid = QtGui.QGridLayout()
         self.pixmap = self.resizeQrCode()
         self.label.setPixmap(self.pixmap)
+        self.label.setMinimumSize(self.qrCodeLabelMinimumSize[0], self.qrCodeLabelMinimumSize[1])
         self.grid.addWidget(self.label,0, 0, QtCore.Qt.AlignCenter)
         self.setLayout(self.grid)
 
@@ -59,10 +60,15 @@ class EZCWidget(QtGui.QWidget):
         ezcUrl = EZCUrl()
         url = ezcUrl.getUrl()
         imgPath = qrCode.getQrcode(url)
+
         self.pixmap.load(imgPath)
         self.pixmap = self.resizeQrCode()
         self.label.setPixmap(self.pixmap)
 
+    def resizeEvent(self, event):
+        self.pixmap = self.resizeQrCode()
+        self.label.setPixmap(self.pixmap)
+   
     def resizeQrCode(self):
         geometryRect = self.geometry() 
         windowX = geometryRect.x()
