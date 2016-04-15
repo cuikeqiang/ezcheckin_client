@@ -26,7 +26,12 @@ class EZCWidget(QtGui.QWidget):
         self.initLayout()
         self.initTimer() 
         self.show()    
-    
+ 
+    def initWindow(self):
+        self.screen = QtGui.QDesktopWidget().screenGeometry()
+        self.setGeometry(0, 0, self.screen.width(), self.screen.height())
+        self.setWindowTitle(self.title)
+   
     def initLabel(self):
         self.label = QtGui.QLabel(self)       
         
@@ -39,30 +44,30 @@ class EZCWidget(QtGui.QWidget):
    
     def initLayout(self):
         self.grid = QtGui.QGridLayout()
-        
-        geometryRect = self.geometry() 
-        print geometryRect.x()
-        print geometryRect.height()
-        self.pixmap = self.pixmap.scaled(self.qrSize[0], self.qrSize[1], \
-            QtCore.Qt.KeepAspectRatio)
+        self.pixmap = self.resizeQrCode()
         self.label.setPixmap(self.pixmap)
         self.grid.addWidget(self.label,0, 0, QtCore.Qt.AlignCenter)
         self.setLayout(self.grid)
 
-    def initWindow(self):
-        self.screen = QtGui.QDesktopWidget().screenGeometry()
-        self.setGeometry(0, 0, self.screen.width(), self.screen.height())
-        self.setWindowTitle(self.title)
-
     def initTimer(self):
         timer = QtCore.QTimer(self)
-        self.connect(timer, QtCore.SIGNAL("timeout()"), self.setImg)
+        self.connect(timer, QtCore.SIGNAL("timeout()"), self.changeQrCode)
         timer.start(self.timerInterval)
 
-    def setImg(self): 
+    def changeQrCode(self):         
         qrCode = EZCQRCode()
         ezcUrl = EZCUrl()
         url = ezcUrl.getUrl()
         imgPath = qrCode.getQrcode(url)
         self.pixmap.load(imgPath)
+        self.pixmap = self.resizeQrCode()
         self.label.setPixmap(self.pixmap)
+
+    def resizeQrCode(self):
+        geometryRect = self.geometry() 
+        windowX = geometryRect.x()
+        windowY = geometryRect.y()
+        windowHeight = geometryRect.height()
+        windowWidth = geometryRect.width()
+        return self.pixmap.scaled(windowHeight - 50, windowWidth - 50, \
+            QtCore.Qt.KeepAspectRatio)
