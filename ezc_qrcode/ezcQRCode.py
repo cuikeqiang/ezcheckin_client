@@ -1,9 +1,11 @@
 import qrcode
 from ezc_config.ezcUrl import EZCUrl
+from ezc_config.ezcConfig import EZCConfig
+
 class EZCQRCode():
     
     def __init__(self):
-        self.imgPath = '/home/ckq/projects/ezcheckin_client/test.png'
+        self.imgPath = EZCConfig.getImgPath()
         
     def getQrcode(self):
         ezcUrl = EZCUrl()

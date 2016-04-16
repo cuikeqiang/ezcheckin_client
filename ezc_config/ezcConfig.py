@@ -1,13 +1,28 @@
+import os, sys
+import ConfigParser
+
 class EZCConfig():
 
     @staticmethod
-    def getHost():
+    def getUrlHost():
         return 'http://www.baidu.com/'
 
     @staticmethod
-    def getPath():
+    def getUrlPathStudent():
         return 's'
 
     @staticmethod
     def getTimeInterval():
-        return 4000
+        return 1000
+
+    @staticmethod
+    def getImgPath():
+        scriptDir = EZCConfig.getScriptDir()
+        imgPath = scriptDir + os.sep + 'ezcqrcode.png'
+        return imgPath
+
+    @staticmethod
+    def getScriptDir():
+        scriptDir = os.path.split(os.path.realpath(sys.argv[0]))[0]
+        return scriptDir
+

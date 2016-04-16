@@ -6,7 +6,7 @@ class EZCUrl():
 
     def getUrl(self):
         timeNow = str(time.time()) 
-        host = EZCConfig.getHost()
-        path = EZCConfig.getPath()
+        host = EZCConfig.getUrlHost()
+        path = EZCConfig.getUrlPathStudent()
         url = host + path + '?wd=' + timeNow
         return url
